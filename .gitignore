@@ -1,4 +1,14 @@
 # Build and Release Folders
+
+ssl
+
+API/bin
+API/obj
+
+/dist
+/tmp
+/out-tsc
+
 bin-debug/
 bin-release/
 [Oo]bj/
