@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Member } from 'src/app/_models/member';
+import { Message } from 'src/app/_models/message';
 import { MembersService } from 'src/app/_services/members.service';
+import { MessageService } from 'src/app/_services/message.service';
 
 @Component({
     selector: 'app-member-detail',
@@ -11,27 +14,44 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberDetailComponent implements OnInit {
 
+    @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
+    activeTab: TabDirective;
+
     galleryOptions: NgxGalleryOptions[];
     galleryImages: NgxGalleryImage[];
 
     member: Member;
+    messages: Message[] = [];
 
-    constructor(private memberService: MembersService, private router: ActivatedRoute) { }
+    constructor(private memberService: MembersService,
+        private router: ActivatedRoute,
+        private messageService: MessageService) { }
 
     ngOnInit(): void {
-        this.loadMember();
+        // this.loadMember();
+
+        this.router.data.subscribe(data=>{
+            this.member = data.member;
+        })
+
+        this.router.queryParams.subscribe(params => {
+            params.tab ? this.selectTab(params.tab) : this.selectTab(0);
+        })
+
         this.galleryOptions = [
             {
-              width: '580px',
-              height: '500px',
-              imagePercent: 100,
-              thumbnailsColumns:4,
-              imageAnimation: NgxGalleryAnimation.Slide,
-              preview: false            }
+                width: '580px',
+                height: '500px',
+                imagePercent: 100,
+                thumbnailsColumns: 4,
+                imageAnimation: NgxGalleryAnimation.Slide,
+                preview: false
+            }
         ]
+        this.galleryImages = this.getImages();
     }
 
-    getImages():NgxGalleryImage[]{
+    getImages(): NgxGalleryImage[] {
         const imageUrls = [];
         for (const photo of this.member.photos) {
             imageUrls.push({
@@ -39,16 +59,32 @@ export class MemberDetailComponent implements OnInit {
                 medium: photo?.url,
                 big: photo?.url,
             })
-            
+
         }
         return imageUrls;
     }
 
-    loadMember(){
-        this.memberService.getMember(this.router.snapshot.paramMap.get('username')).subscribe(member=>{
-            this.member = member;
-            this.galleryImages = this.getImages();
-        });
+    // loadMember() {
+    //     this.memberService.getMember(this.router.snapshot.paramMap.get('username')).subscribe(member => {
+    //         this.member = member; 
+    //     });
+    // }
+
+    loadMessages() {
+        this.messageService.getMessageThread(this.member.username).subscribe(messages => {
+            this.messages = messages;
+        })
+    }
+
+    selectTab(tabId: number) {
+        this.memberTabs.tabs[tabId].active = true
+    }
+
+    onTabActivated(data: TabDirective) {
+        this.activeTab = data;
+        if (this.activeTab.heading === 'Messages' && this.messages.length === 0) {
+            this.loadMessages();
+        }
     }
 
 }

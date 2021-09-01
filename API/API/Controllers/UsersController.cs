@@ -43,11 +43,7 @@ namespace API.Controllers
                 userParams.Gender = user.Gender == "male" ? "female" : "male";
             }
 
-
             var users = await _userRepository.GetMembersAsync(userParams);
-
-            //var users = await _userRepository.GetMembersAsync();
-            //var usersToReturn = _mapper.Map<IEnumerable<MemberDto>>(users);
 
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize,
                 users.TotalCount, users.TotalPages);
@@ -60,7 +56,6 @@ namespace API.Controllers
         {
             return await _userRepository.GetMemberAsync(username);
 
-            //return _mapper.Map<MemberDto>(user);
         }
 
         [HttpPut]
@@ -101,7 +96,6 @@ namespace API.Controllers
 
             if (await _userRepository.SaveAllAsync())
             {
-                //return _mapper.Map<PhotoDto>(photo);
                 return CreatedAtRoute("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDto>(photo));
             }
 
