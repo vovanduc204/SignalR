@@ -61,7 +61,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
         {
-            var username = User.GetUsername(); // ClaimsPrincipleExtensions
+            var username = User.GetUsername();
             var user = await _userRepository.GetUserByUserNameAsync(username);
 
             _mapper.Map(memberUpdateDto, user);

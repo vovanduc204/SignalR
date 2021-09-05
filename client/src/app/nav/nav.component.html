@@ -14,6 +14,9 @@
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
                     </li>
+                    <li *appHasRole='["Admin", "Moderator"]' class="nav-item">
+                        <a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
+                    </li>
                 </ng-container>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
@@ -31,7 +34,7 @@
                 <img src="{{user.photoUrl||'./assets/user.png'}}" alt="{{user.userName}}">
                 <li class="nav-item dropdown" >
                     <a class="nav-link dropdown-toggle text-light mt-2" href="#" id="dropdown03" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">Welcome {{user.knownAs | titlecase}}</a>
+                        aria-haspopup="true" aria-expanded="false">Welcome {{user.knownAs || user.userName | titlecase}}</a>
                     <div class="dropdown-menu mt-3" aria-labelledby="dropdown03">
                         <a routerLink="/member/edit" class="dropdown-item" href="#">Edit Profile</a>
                         <a class="dropdown-item" href="#" (click)="logout()">Logout</a>
