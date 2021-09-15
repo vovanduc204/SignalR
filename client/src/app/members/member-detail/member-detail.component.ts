@@ -38,7 +38,6 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     }
 
-
     ngOnInit(): void {
 
         this.route.data.subscribe(data => {
@@ -70,7 +69,6 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
                 medium: photo?.url,
                 big: photo?.url,
             })
-
         }
         return imageUrls;
     }

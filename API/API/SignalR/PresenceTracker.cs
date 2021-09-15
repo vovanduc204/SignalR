@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +6,7 @@ namespace API.SignalR
 {
     public class PresenceTracker
     {
-        private readonly Dictionary<string, List<string>> OnlineUsers = 
+        private static readonly Dictionary<string, List<string>> OnlineUsers = 
             new Dictionary<string, List<string>>();
 
         public Task<bool> UserConnected(string username, string connectionId)
@@ -60,7 +59,7 @@ namespace API.SignalR
             return Task.FromResult(onlineUsers);
         }
 
-        public Task<List<string>> GetConnectionForder(string username)
+        public Task<List<string>> GetConnectionsForUser(string username)
         {
             List<string> connectionIds;
             lock (OnlineUsers)
